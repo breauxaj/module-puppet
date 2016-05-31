@@ -41,12 +41,14 @@ class puppet::params {
   }
 
   file { '/var/lib/puppet':
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    recurse => true,
-    force   => true,
+    ensure  => directory,
+    owner   => 'puppet',
+    group   => 'puppet',
+    mode    => '0755',
+    require => [
+      User['puppet'],
+      Group['puppet']
+    ]
   }
 
   group { 'puppet':
