@@ -6,6 +6,12 @@
 #   - Defines numerous parameters used by other classes
 #
 class puppet::params {
+  $puppet_minute   = '*/15',
+  $puppet_hour     = '*',
+  $puppet_monthday = '*',
+  $puppet_month    = '*',
+  $puppet_weekday  = '*'
+
   file { '/etc/puppet':
     ensure => directory,
     owner  => 'root',
