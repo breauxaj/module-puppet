@@ -6,33 +6,6 @@
 #   - Defines numerous parameters used by other classes
 #
 class puppet::params {
-  case $::operatingsystem {
-    'amazon': {
-      $puppet_packages = [
-        'augeas',
-        'facter2',
-        'puppet3',
-      ]
-    }
-    'centos', 'redhat': {
-      $puppet_packages = [
-        'augeas',
-        'facter',
-        'puppet'
-      ]
-    }
-    'debian', 'ubuntu': {
-      $puppet_packages = [
-        'augeas-lenses',
-        'facter',
-        'puppet'
-      ]
-    }
-    default: {
-      fail("Unsupported version: ${::operatingsystem}")
-    }
-  }
-
   file { '/etc/puppet':
     ensure => directory,
     owner  => 'root',
@@ -65,4 +38,51 @@ class puppet::params {
     uid        => 52,
   }
 
+  case $::osfamily {
+    'Debian': {
+      case $::operatingsystemmajrelease {
+        '8': {
+          $puppet_packages = [
+            'augeas-lenses',
+            'facter',
+            'puppet'
+          ]
+        }
+        default: {
+          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+        }
+      }
+    }
+    'RedHat': {
+      case $::operatingsystemmajrelease {
+        '6': {
+          $puppet_packages = [
+            'augeas',
+            'facter',
+            'puppet'
+          ]
+        }
+        '7': {
+          $puppet_packages = [
+            'augeas',
+            'facter',
+            'puppet'
+          ]
+        }
+        '2016': {
+          $puppet_packages = [
+            'augeas',
+            'facter2',
+            'puppet3',
+          ]
+        }
+        default: {
+          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+        }
+      }
+    }
+    default: {
+      fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
+    }
+  }
 }
