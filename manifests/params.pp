@@ -6,11 +6,13 @@
 #   - Defines numerous parameters used by other classes
 #
 class puppet::params {
-  $puppet_minute   = '*/15'
-  $puppet_hour     = '*'
-  $puppet_monthday = '*'
-  $puppet_month    = '*'
-  $puppet_weekday  = '*'
+  $puppet_package_ensure = 'latest'
+  
+  $puppet_minute         = '*/15'
+  $puppet_hour           = '*'
+  $puppet_monthday       = '*'
+  $puppet_month          = '*'
+  $puppet_weekday        = '*'
 
   file { '/etc/puppet':
     ensure => directory,
@@ -44,22 +46,15 @@ class puppet::params {
     uid        => 52,
   }
 
-  case $::osfamily {
-    'Debian': {
-      case $::operatingsystemmajrelease {
-        '8': {
-          $puppet_packages = [
-            'augeas-lenses',
-            'facter',
-            'puppet'
-          ]
-        }
-        default: {
-          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
-        }
-      }
+  case $::operatingsystem {
+    'Amazon': {
+      $puppet_packages = [
+        'augeas',
+        'facter2',
+        'puppet3',
+      ]
     }
-    'RedHat': {
+    'CentOS', 'RedHat': {
       case $::operatingsystemmajrelease {
         '6': {
           $puppet_packages = [
@@ -75,11 +70,18 @@ class puppet::params {
             'puppet'
           ]
         }
-        '2016': {
+        default: {
+          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+        }
+      }
+    }
+    'Debian': {
+      case $::operatingsystemmajrelease {
+        '8': {
           $puppet_packages = [
-            'augeas',
-            'facter2',
-            'puppet3',
+            'augeas-lenses',
+            'facter',
+            'puppet'
           ]
         }
         default: {
@@ -88,7 +90,7 @@ class puppet::params {
       }
     }
     default: {
-      fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
+      fail("The ${module_name} module is not supported on an ${::operatingsystem} based system.")
     }
   }
 }

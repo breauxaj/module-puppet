@@ -1,9 +1,9 @@
 define puppet::standalone  (
-  $minute = $puppet::params::puppet_minute,
-  $hour = $puppet::params::puppet_hour,
+  $minute   = $puppet::params::puppet_minute,
+  $hour     = $puppet::params::puppet_hour,
   $monthday = $puppet::params::puppet_monthday,
-  $month = $puppet::params::puppet_month,
-  $weekday = $puppet::params::puppet_weekday
+  $month    = $puppet::params::puppet_month,
+  $weekday  = $puppet::params::puppet_weekday
 ) {
   include ::puppet
 

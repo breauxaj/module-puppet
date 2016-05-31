@@ -20,7 +20,7 @@
 #    }
 #
 class puppet (
-  $ensure = 'latest'
+  $ensure = $::puppet::params::puppet_package_ensure
 ) inherits ::puppet::params {
   package { $::puppet::params::puppet_packages:
     ensure  => $ensure,
