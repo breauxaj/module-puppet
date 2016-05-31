@@ -9,7 +9,7 @@ define puppet::standalone  (
 
   cron { 'puppet':
     command  => '/etc/puppet/apply.sh > /dev/null 2>&1',
-    user     => root,
+    user     => 'root',
     minute   => $minute,
     hour     => $hour,
     monthday => $monthday,
@@ -19,7 +19,7 @@ define puppet::standalone  (
 
   cron { 'reports':
     command  => '/usr/local/sbin/reports.sh > /dev/null 2>&1',
-    user     => root,
+    user     => 'root',
     minute   => '0',
     hour     => '0',
     require  => File['/usr/local/sbin/reports.sh'],
