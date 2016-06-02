@@ -54,7 +54,7 @@ class puppet::params {
         'puppet3',
       ]
     }
-    'CentOS', 'RedHat': {
+    'CentOS', 'OracleLinux', 'RedHat': {
       case $::operatingsystemmajrelease {
         '6': {
           $puppet_packages = [
