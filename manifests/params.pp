@@ -21,31 +21,6 @@ class puppet::params {
     mode   => '0700',
   }
 
-  file { '/var/lib/puppet':
-    ensure  => directory,
-    owner   => 'puppet',
-    group   => 'puppet',
-    mode    => '0755',
-    require => [
-      User['puppet'],
-      Group['puppet']
-    ]
-  }
-
-  group { 'puppet':
-    ensure => present,
-    gid    => 52,
-  }
-
-  user { 'puppet':
-    ensure     => present,
-    gid        => 52,
-    home       => '/var/lib/puppet',
-    shell      => '/bin/false',
-    managehome => true,
-    uid        => 52,
-  }
-
   case $::operatingsystem {
     'Amazon': {
       $puppet_packages = [
@@ -54,7 +29,7 @@ class puppet::params {
         'puppet3',
       ]
     }
-    'CentOS', 'OracleLinux', 'RedHat': {
+    'CentOS', 'OracleLinux', 'RedHat', 'Scientific': {
       case $::operatingsystemmajrelease {
         '6': {
           $puppet_packages = [

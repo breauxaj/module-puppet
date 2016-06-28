@@ -24,10 +24,6 @@ class puppet (
 ) inherits ::puppet::params {
   package { $::puppet::params::puppet_packages:
     ensure  => $ensure,
-    require => [
-      User['puppet'],
-      Group['puppet'],
-    ]
   }
 
 }
