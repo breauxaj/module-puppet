@@ -18,11 +18,11 @@ define puppet::standalone  (
   }
 
   cron { 'reports':
-    command  => '/usr/local/sbin/reports.sh > /dev/null 2>&1',
-    user     => 'root',
-    minute   => '0',
-    hour     => '0',
-    require  => File['/usr/local/sbin/reports.sh'],
+    command => '/usr/local/sbin/reports.sh > /dev/null 2>&1',
+    user    => 'root',
+    minute  => '0',
+    hour    => '0',
+    require => File['/usr/local/sbin/reports.sh'],
   }
 
   file { '/usr/local/sbin/reports.sh':

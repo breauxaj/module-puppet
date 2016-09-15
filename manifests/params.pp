@@ -7,7 +7,7 @@
 #
 class puppet::params {
   $puppet_package_ensure = 'latest'
-  
+
   $puppet_minute         = '*/15'
   $puppet_hour           = '*'
   $puppet_monthday       = '*'
