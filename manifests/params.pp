@@ -64,6 +64,20 @@ class puppet::params {
         }
       }
     }
+    'Ubuntu': {
+      case $::operatingsystemrelease {
+        '14.04': {
+          $puppet_packages = [
+            'augeas-lenses',
+            'facter',
+            'puppet'
+          ]
+        }
+        default: {
+          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+        }
+      }
+    }
     default: {
       fail("The ${module_name} module is not supported on an ${::operatingsystem} based system.")
     }
