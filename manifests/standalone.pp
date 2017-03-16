@@ -8,7 +8,7 @@ define puppet::standalone  (
   include ::puppet
 
   cron { 'puppet':
-    command  => '/etc/puppet/apply.sh > /dev/null 2>&1',
+    command  => "${::puppet::params::puppet_home}/${::puppet::params::puppet_apply} > /dev/null 2>&1",
     user     => 'root',
     minute   => $minute,
     hour     => $hour,
@@ -31,6 +31,12 @@ define puppet::standalone  (
     group  => 'root',
     mode   => '0755',
     source => 'puppet:///modules/puppet/reports.sh'
+  }
+
+  service { $::puppet::params::puppet_service:
+    ensure  => stopped,
+    enable  => false,
+    require => Package[$::puppet::params::puppet_packages]
   }
 
 }

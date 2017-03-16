@@ -8,13 +8,18 @@
 class puppet::params {
   $puppet_package_ensure = 'latest'
 
-  $puppet_minute         = '*/15'
-  $puppet_hour           = '*'
-  $puppet_monthday       = '*'
-  $puppet_month          = '*'
-  $puppet_weekday        = '*'
+  $puppet_apply    = hiera('puppet::apply','apply.sh')
+  $puppet_home     = hiera('puppet::home','/etc/puppet')
 
-  file { '/etc/puppet':
+  $puppet_minute   = fqdn_rand(60)
+  $puppet_hour     = '*'
+  $puppet_monthday = '*'
+  $puppet_month    = '*'
+  $puppet_weekday  = '*'
+
+  $puppet_service = 'puppet'
+
+  file { $puppet_home:
     ensure => directory,
     owner  => 'root',
     group  => 'root',
@@ -30,25 +35,11 @@ class puppet::params {
       ]
     }
     'CentOS', 'OracleLinux', 'RedHat', 'Scientific': {
-      case $::operatingsystemmajrelease {
-        '6': {
-          $puppet_packages = [
-            'augeas',
-            'facter',
-            'puppet'
-          ]
-        }
-        '7': {
-          $puppet_packages = [
-            'augeas',
-            'facter',
-            'puppet'
-          ]
-        }
-        default: {
-          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
-        }
-      }
+      $puppet_packages = [
+        'augeas',
+        'facter',
+        'puppet'
+      ]
     }
     'Debian': {
       case $::operatingsystemmajrelease {
@@ -67,6 +58,13 @@ class puppet::params {
     'Ubuntu': {
       case $::operatingsystemrelease {
         '14.04': {
+          $puppet_packages = [
+            'augeas-lenses',
+            'facter',
+            'puppet'
+          ]
+        }
+        '16.04': {
           $puppet_packages = [
             'augeas-lenses',
             'facter',
