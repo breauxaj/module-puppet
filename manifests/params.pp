@@ -57,14 +57,7 @@ class puppet::params {
     }
     'Ubuntu': {
       case $::operatingsystemrelease {
-        '14.04': {
-          $puppet_packages = [
-            'augeas-lenses',
-            'facter',
-            'puppet'
-          ]
-        }
-        '16.04': {
+        '14.04', '16.04': {
           $puppet_packages = [
             'augeas-lenses',
             'facter',
