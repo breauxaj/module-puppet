@@ -26,51 +26,51 @@ class puppet::params {
     mode   => '0700',
   }
 
-  case $::operatingsystem {
-    'Amazon': {
-      $puppet_packages = [
-        'augeas',
-        'facter2',
-        'puppet3',
-      ]
-    }
-    'CentOS', 'OracleLinux', 'RedHat', 'Scientific': {
-      $puppet_packages = [
-        'augeas',
-        'facter',
-        'puppet'
-      ]
-    }
+  case $::osfamily {
     'Debian': {
-      case $::operatingsystemmajrelease {
-        '8': {
-          $puppet_packages = [
-            'augeas-lenses',
-            'facter',
-            'puppet'
-          ]
-        }
+      case $::operatingsystem {
         default: {
-          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+          case $::operatingsystemmajrelease {
+            default: {
+              $puppet_packages = [
+                'augeas-lenses',
+                'facter',
+                'puppet'
+              ]
+            }
+          }
         }
       }
     }
-    'Ubuntu': {
-      case $::operatingsystemrelease {
-        '14.04', '16.04': {
-          $puppet_packages = [
-            'augeas-lenses',
-            'facter',
-            'puppet'
-          ]
+    'RedHat': {
+      case $::operatingsystem {
+        'Amazon': {
+          case $::operatingsystemmajrelease {
+            default: {
+              $puppet_packages = [
+                'augeas',
+                'facter2',
+                'puppet3',
+              ]
+            }
+          }
         }
         default: {
-          fail("The ${module_name} module is not supported on an ${::operatingsystem} ${::operatingsystemmajrelease} distribution.")
+          case $::operatingsystemmajrelease {
+            default: {
+              $puppet_packages = [
+                'augeas',
+                'facter',
+                'puppet'
+              ]
+            }
+          }
         }
       }
     }
     default: {
-      fail("The ${module_name} module is not supported on an ${::operatingsystem} based system.")
+      fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
     }
   }
+
 }
