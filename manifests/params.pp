@@ -11,6 +11,8 @@ class puppet::params {
   $puppet_apply    = hiera('puppet::apply','apply.sh')
   $puppet_home     = hiera('puppet::home','/etc/puppet')
 
+  $puppet_branch   = '/etc/puppet_branch'
+
   $puppet_minute   = fqdn_rand(60)
   $puppet_hour     = '*'
   $puppet_monthday = '*'
@@ -26,47 +28,28 @@ class puppet::params {
     mode   => '0700',
   }
 
+  file { $puppet_branch:
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => $::puppet_branch,
+  }
+
   case $::osfamily {
-    'Debian': {
-      case $::operatingsystem {
-        default: {
-          case $::operatingsystemmajrelease {
-            default: {
-              $puppet_packages = [
-                'augeas-lenses',
-                'facter',
-                'puppet'
-              ]
-            }
-          }
-        }
-      }
-    }
     'RedHat': {
-      case $::operatingsystem {
-        'Amazon': {
-          case $::operatingsystemmajrelease {
-            default: {
-              $puppet_packages = [
-                'augeas',
-                'facter2',
-                'puppet3',
-              ]
-            }
-          }
-        }
-        default: {
-          case $::operatingsystemmajrelease {
-            default: {
-              $puppet_packages = [
-                'augeas',
-                'facter',
-                'puppet'
-              ]
-            }
-          }
-        }
-      }
+      $puppet_packages = [
+        'augeas',
+        'facter',
+        'puppet'
+      ]
+    }
+    'Debian': {
+      $puppet_packages = [
+        'augeas-lenses',
+        'facter',
+        'puppet'
+      ]
     }
     default: {
       fail("The ${module_name} module is not supported on an ${::osfamily} based system.")
